@@ -16,7 +16,8 @@
             <div>
                 <h2>Did {{ student }} show concerted effort?</h2>
                 <div>
-                    <button class="btn btn-success btn-lg mr-2" onclick="location.href='/yes_effort'">Yes</button>            
+                    <button class="btn btn-success btn-lg mr-2" onclick="location.href='/yes_effort'">Yes</button>
+                    <button class="btn btn-warning btn-lg mr-2" onclick="location.href='/half_effort'">Moderate</button>            
                     <button class="btn btn-danger btn-lg mr-2" onclick="location.href='/no_effort'">No</button>
                 </div>
             </div>
@@ -29,6 +30,13 @@
     document.addEventListener('keydown', function(event) {
         if (event.key === 'y') {
             window.location.href = '/yes_effort';
+        }
+    });
+
+    /* if user presses the 'm' key, redirect to /half_effort */
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'm') {
+            window.location.href = '/half_effort';
         }
     });
 

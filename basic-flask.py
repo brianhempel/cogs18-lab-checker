@@ -38,6 +38,8 @@ def index():
                 if row['student'] == student_id:
                     if row['effort'] == 'Yes':
                         student_grade = "good"
+                    elif row['effort'] == 'Moderate':
+                        student_grade = "okay"
                     elif row['effort'] == 'No':
                         student_grade = "bad"
                     else:
@@ -89,6 +91,28 @@ def yes_effort():
     for row in MEMORY['output']:
         if row['student'] == student_id:
             row['effort'] = 'Yes'
+            break
+
+    # write in-progress csv
+    with open(MEMORY['output_path'], 'w') as f:
+        writer = csv.DictWriter(f, fieldnames=['student', 'lab', 'effort', 'date_submitted'])
+        writer.writeheader()
+        writer.writerows(MEMORY['output'])
+
+    # go to the the /next route once finished
+    return redirect(url_for('next_file'))
+
+@app.route('/half_effort')
+def half_effort():
+    global MEMORY
+
+    # check if the student ID is already in the output
+    student_id = MEMORY['student_names'][MEMORY['current_student_index']]
+
+    # if the student ID is already in the output, then update the effort grade
+    for row in MEMORY['output']:
+        if row['student'] == student_id:
+            row['effort'] = 'Moderate'
             break
 
     # write in-progress csv
@@ -167,36 +191,39 @@ def main():
     STUDENT_NOTEBOOKS_ROOT = "labs/submitted"
 
     STUDENT_NOTEBOOK_PATTERNS = {
-        "CL1": "Coding Lab 1/CL1-Tooling.ipynb",
-        "CL2": "Coding-Lab-2/CL2-ProgrammingI.ipynb",
-        "CL3": "Coding-Lab-3/CL3-Programming.ipynb",
-        "CL4": "Coding-Lab-4/CL4-Collections.ipynb",
-        "CL5": "Coding-Lab-5/CL5-Loops.ipynb",
-        "CL6": "Coding-Lab-6/CL6-Classes.ipynb",
-        "CL7": "Coding-Lab-7/CL7-CommandLine.ipynb",
-        "CL8": "Coding-Lab-8/CL8-ScientificComputing.ipynb"
+        "CL1": "Coding-Lab-1/CL1-Tooling.ipynb",
+        "CL2": "Coding-Lab-2/CL2-VariablesOperatorsFunctionsAsserts.ipynb",
+        # "CL3": "Coding-Lab-3/CL3-Programming.ipynb",
+        # "CL4": "Coding-Lab-4/CL4-Collections.ipynb",
+        # "CL5": "Coding-Lab-5/CL5-Loops.ipynb",
+        # "CL6": "Coding-Lab-6/CL6-Classes.ipynb",
+        # "CL7": "Coding-Lab-7/CL7-CommandLine.ipynb",
+        # "CL8": "Coding-Lab-8/CL8-ScientificComputing.ipynb"
     }
 
     ASSIGNMENT_NOTEBOOK_PATH = {
         "CL1": "labs/assignments/CL1-Tooling.ipynb",
-        "CL2": "labs/assignments/CL2-ProgrammingI.ipynb",
-        "CL3": "labs/assignments/CL3-Programming.ipynb",
-        "CL4": "labs/assignments/CL4-Collections.ipynb",
-        "CL5": "labs/assignments/CL5-Loops.ipynb",
-        "CL6": "labs/assignments/CL6-Classes.ipynb",
-        "CL7": "labs/assignments/CL7-CommandLine.ipynb",
-        "CL8": "labs/assignments/CL8-ScientificComputing.ipynb"
+        "CL2": "labs/assignments/CL2-VariablesOperatorsFunctionsAsserts.ipynb",
+        # "CL3": "labs/assignments/CL3-Programming.ipynb",
+        # "CL4": "labs/assignments/CL4-Collections.ipynb",
+        # "CL5": "labs/assignments/CL5-Loops.ipynb",
+        # "CL6": "labs/assignments/CL6-Classes.ipynb",
+        # "CL7": "labs/assignments/CL7-CommandLine.ipynb",
+        # "CL8": "labs/assignments/CL8-ScientificComputing.ipynb"
     }
 
     parser.add_argument("--lab", help="The lab to be graded", choices=STUDENT_NOTEBOOK_PATTERNS.keys())
-    # add flags for --evens and --odds (cannot pass both)
-    parser.add_argument('--evens', help='Whether to grade only even students', action='store_true')
-    parser.add_argument('--odds', help='Whether to grade only odd students', action='store_true')
+    # add flags for --U and --S and --H (cannot pass both)
+    parser.add_argument('--U', help='Whether to grade only first 1/3 students', action='store_true')
+    parser.add_argument('--S', help='Whether to grade only second 1/3 students', action='store_true')
+    parser.add_argument('--H', help='Whether to grade only third 1/3 students', action='store_true')
+    
     
     args = parser.parse_args()
 
-    if args.evens and args.odds:
-        print("Cannot pass both --evens and --odds")
+    #TODO 
+    if args.U and args.S:
+        print("Cannot pass both --U and --S")
         sys.exit(1)
 
     original_notebook_path = ASSIGNMENT_NOTEBOOK_PATH[args.lab]
@@ -218,10 +245,12 @@ def main():
     MEMORY['student_names'] = sorted(student_names)
     MEMORY['current_student_index'] = 0 
 
-    if args.evens:
-        MEMORY['student_names'] = MEMORY['student_names'][::2]
-    elif args.odds:
-        MEMORY['student_names'] = MEMORY['student_names'][1::2]
+    if args.U:
+        MEMORY['student_names'] = MEMORY['student_names'][::3]
+    elif args.S:
+        MEMORY['student_names'] = MEMORY['student_names'][1::3]
+    elif args.H:
+        MEMORY['student_names'] = MEMORY['student_names'][2::3]
 
     MEMORY['students'] = {}
 
@@ -243,10 +272,12 @@ def main():
             'date_submitted': date_submitted,
         })
 
-    if args.evens:
-        suffix = 'evens'
-    elif args.odds:
-        suffix = 'odds'
+    if args.U:
+        suffix = 'Unay'
+    elif args.S:
+        suffix = 'Sihan'
+    elif args.H:
+        suffix = 'Hanqing'
     else:
         suffix = 'all'
 

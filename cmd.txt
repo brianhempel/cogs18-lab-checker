@@ -1,1 +1,4 @@
-python basic-flask.py --lab="CL1"
+python basic-flask.py --lab="CL1" --H
+
+1.Please change the lab name "CL1" to whichever lab you want to grade.
+2.Please change the --H to your name prefix (--U for Unay, --S for Sihan, --H for Hanqing)

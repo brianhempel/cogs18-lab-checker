@@ -86,6 +86,9 @@ def main():
     # if both the column for 'effort' is 'Yes' and the column for 'on_time' is true, then the student gets full credit
     merged_df["grade"] = merged_df.apply(lambda row: 2 if row["effort"] == "Yes" and row["on_time"] else 0, axis = 1)
 
+    # TODO if if both the column for 'effort' is 'Moderate' and the column for 'on_time' is true, then the student gets half credit
+    merged_df["grade"] = merged_df.apply(lambda row: 1 if row["effort"] == "Moderate" and row["on_time"] else 0, axis = 1)
+
     # merge the template and the merged_df together (on the basis of 'student' in merged_df and 'SIS Login ID' in template)
     # when merging, keep all the rows in the template
     grade_df = pd.merge(template, merged_df, how = "left", left_on = "SIS Login ID", right_on = "student")

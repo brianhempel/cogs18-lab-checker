@@ -47,6 +47,9 @@
                   {% if value == 'good' %}
                       {% set btn_value = 'btn-success' %}
                       {% set emoji = '👍' %}
+                  {% elif value == 'okay' %}
+                      {% set btn_value = 'btn-warning' %}
+                      {% set emoji = '👌' %}
                   {% elif value == 'bad' %}
                       {% set btn_value = 'btn-danger' %}
                       {% set emoji = '👎' %}
