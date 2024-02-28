@@ -2,3 +2,15 @@ python basic-flask.py --lab="CL1" --H
 
 1.Please change the lab name "CL1" to whichever lab you want to grade.
 2.Please change the --H to your name prefix (--U for Unay, --S for Sihan, --H for Hanqing)
+
+
+After having all the TA's grading csv ('yes,moderate,no') in output folder, run this:
+Change the CL1 to whichever CL you want to change the grade to 2, 1, 0. 
+The script automatically get all files, no need to manually combine those.
+
+python util/create_grade_csv.py --assignment_name=CL1
+
+Then in the 'grades' section on canvas, click 'import' then upload the CL1-canvas-format file, wait about a min
+and reload the page. Then set default grad to 0. 
+After every grade is loaded, press the button on the right and then click "post grade'. 
+Can post a piazza note after the grade is posted.

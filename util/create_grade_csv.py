@@ -15,14 +15,6 @@ def main():
         "CL8"
     ]
 
-    ASSIGNMENT_NAMES = {
-        "CL1": "Coding Lab 1",
-        "CL2": "Coding Lab 2",
-        "CL3": "Coding Lab 3",
-        "CL4": "Coding Lab 4",
-        "CL5": "Coding Lab 5"
-    }
-
     parser = argparse.ArgumentParser()
 
     parser.add_argument("--template_file", help="The file to use as a template (download from Canvas)", required = False, default = "util/template.csv")
@@ -51,7 +43,7 @@ def main():
     template = template[KEY_TO_KEEP]
 
     # Remove the row that has "206982" as the ID column
-    template = template[template["ID"] != "206982"]
+    # template = template[template["ID"] != "206982"]
 
     # read in the input CSV files (all files starting with the assignment name inside the output folder)
     input_files = glob.glob(f"output/{args.assignment_name}*.csv")
@@ -87,7 +79,7 @@ def main():
     merged_df["grade"] = merged_df.apply(lambda row: 2 if row["effort"] == "Yes" and row["on_time"] else 0, axis = 1)
 
     # TODO if if both the column for 'effort' is 'Moderate' and the column for 'on_time' is true, then the student gets half credit
-    merged_df["grade"] = merged_df.apply(lambda row: 1 if row["effort"] == "Moderate" and row["on_time"] else 0, axis = 1)
+    merged_df["grade"] = merged_df.apply(lambda row: 1 if row["effort"] == "Moderate" and row["on_time"] else row['grade'], axis = 1)
 
     # merge the template and the merged_df together (on the basis of 'student' in merged_df and 'SIS Login ID' in template)
     # when merging, keep all the rows in the template
@@ -126,10 +118,10 @@ def main():
     final_csv = grade_df[KEY_TO_KEEP + ["grade"]]
 
     # rename the grades column to the assignment name
-    final_csv = final_csv.rename(columns = {"grade": ASSIGNMENT_NAMES[args.assignment_name]})
+    final_csv = final_csv.rename(columns = {"grade": args.assignment_name})
 
     # find the row unde the "Student" column that has "Points Possible" as a substring. Assign the cell in that row under the assignment name column to be 2. Handle NA values by skipping them
-    final_csv.loc[final_csv["Student"].str.contains("Points Possible", na = False), ASSIGNMENT_NAMES[args.assignment_name]] = 2
+    final_csv.loc[final_csv["Student"].str.contains("Points Possible", na = False), args.assignment_name] = 2
 
     # write the final CSV
     final_csv.to_csv(f'{args.output_folder}/{args.assignment_name}-canvas-format.csv', index = False)

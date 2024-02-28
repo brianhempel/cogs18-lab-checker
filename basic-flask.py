@@ -193,7 +193,7 @@ def main():
     STUDENT_NOTEBOOK_PATTERNS = {
         "CL1": "Coding-Lab-1/CL1-Tooling.ipynb",
         "CL2": "Coding-Lab-2/CL2-VariablesOperatorsFunctionsAsserts.ipynb",
-        # "CL3": "Coding-Lab-3/CL3-Programming.ipynb",
+        "CL3": "Coding-Lab-3/CL3-ContionalsCollections.ipynb",
         # "CL4": "Coding-Lab-4/CL4-Collections.ipynb",
         # "CL5": "Coding-Lab-5/CL5-Loops.ipynb",
         # "CL6": "Coding-Lab-6/CL6-Classes.ipynb",
@@ -204,7 +204,7 @@ def main():
     ASSIGNMENT_NOTEBOOK_PATH = {
         "CL1": "labs/assignments/CL1-Tooling.ipynb",
         "CL2": "labs/assignments/CL2-VariablesOperatorsFunctionsAsserts.ipynb",
-        # "CL3": "labs/assignments/CL3-Programming.ipynb",
+        "CL3": "labs/assignments/CL3-ContionalsCollections.ipynb",
         # "CL4": "labs/assignments/CL4-Collections.ipynb",
         # "CL5": "labs/assignments/CL5-Loops.ipynb",
         # "CL6": "labs/assignments/CL6-Classes.ipynb",
